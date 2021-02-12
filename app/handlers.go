@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jonathanbs9/bankingApp/service"
 )
 
 type Customer struct {
@@ -15,16 +17,27 @@ type Customer struct {
 	City      string `json:"city" xml:"city"`
 }
 
-func greet(w http.ResponseWriter, r *http.Request) {
+/*func greet(w http.ResponseWriter, r *http.Request) {
 	message := "Hola Mundo bankApp"
 
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(message)
+}*/
+
+// Construyo un handler que va a tener el service. De esta manera conecto handler-service
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-
-	customers := []Customer{
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	// llamo al handler -> service -> func
+	customers, err := ch.service.GetAllCustomer()
+	if err != nil {
+		log.Fatal("Error al obtener los clientes | " + err.Error())
+		return
+	}
+	// HardCoded customers
+	/*customers := []Customer{
 		{
 			FirstName: "Jonathan",
 			LastName:  "Brull Schroeder",
@@ -40,16 +53,7 @@ func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 			LastName:  "Van Buuren",
 			City:      "Jarbeus",
 		},
-		{
-			FirstName: "Popof",
-			LastName:  "Popote",
-			City:      "Paris",
-		}, {
-			FirstName: "Joseph",
-			LastName:  "Capriati",
-			City:      "Napoli",
-		},
-	}
+	}*/
 
 	if r.Header.Get("Content-type") == "application/xml" {
 		// XML format
