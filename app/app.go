@@ -15,7 +15,8 @@ func Start() {
 	router := mux.NewRouter()
 
 	// Cableado
-	ch := CustomerHandlers{service: service.NewCustomerService(domain.NewCustomerRepositoryStub())}
+	//ch := CustomerHandlers{service: service.NewCustomerService(domain.NewCustomerRepositoryStub())}
+	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryDB())}
 
 	// Define routes
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
