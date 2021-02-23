@@ -48,8 +48,8 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 	// Here we link handler with service
 	customer, err := ch.service.GetCustomerById(id)
 	if err!= nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Println(w, err.Error())
+		w.WriteHeader(err.Code)
+		fmt.Println(w, err.Message)
 	}
 	// Case success
 	w.Header().Set("Content-type", "application/json")

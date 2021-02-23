@@ -1,10 +1,13 @@
 package service
 
-import "github.com/jonathanbs9/bankingApp/domain"
+import (
+	"github.com/jonathanbs9/bankingApp/domain"
+	"github.com/jonathanbs9/bankingApp/errs"
+)
 
 type CustomerService interface {
 	GetAllCustomer() ([]domain.Customer, error)
-	GetCustomerById(string) (*domain.Customer, error)
+	GetCustomerById(string) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -16,7 +19,7 @@ func (s DefaultCustomerService) GetAllCustomer() ([]domain.Customer, error) {
 }
 
 // Here we link service with repository
-func (s DefaultCustomerService) GetCustomerById(id string) (*domain.Customer, error) {
+func (s DefaultCustomerService) GetCustomerById(id string) (*domain.Customer, *errs.AppError) {
 	return s.repo.GetCustomerById(id)
 }
 

@@ -3,6 +3,7 @@ package domain
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jonathanbs9/bankingApp/errs"
 	"log"
 	"time"
 )
@@ -55,7 +56,7 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	}
 }
 
-func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, error) {
+func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, *errs.AppError) {
 	// Hacemos una llamada a la base de datos
 	customerSql := "select customer_id, first_name, last_name, city, zipcode, date_birth, status from customers where customer_id = ?"
 	row := d.client.QueryRow(customerSql, id)
@@ -63,10 +64,14 @@ func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, error) {
 
 	err:= row.Scan(&c.Id, &c.FirstName, &c.LastName, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status)
 	if err != nil{
-		log.Println("Error al buscar un cliente => " + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows{
+			return nil, errs.NewNotFoundError("Cliente no encontrado")
+		} else {
+			log.Println("Error al buscar un cliente => " + err.Error())
+			return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
+		}
+
 	}
-	// Implementar si no encuentra el customer porque no existe en BD (404). No debería ser un error. Sino devolver vacio
 
 	return &c, nil
 }
