@@ -1,3 +1,5 @@
 # bankingApp
 
-### Database Adapter 11:00
+## GET - Customers
+## GET - Customers/{id}
+
