@@ -16,10 +16,13 @@ func Start() {
 
 	// Cableado
 	//ch := CustomerHandlers{service: service.NewCustomerService(domain.NewCustomerRepositoryStub())}
-	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryDB())}
+	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryDb())}
+
+
 
 	// Define routes
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customers/{id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)
 
 	/*router.HandleFunc("/greet", greet)
 	router.HandleFunc("/customers/{id}", getCustomerById).Methods(http.MethodGet)

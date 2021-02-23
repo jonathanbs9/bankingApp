@@ -40,7 +40,7 @@ func (d *CustomerRepositoryDb) FindAll() ([]Customer, error) {
 	return customers, nil
 }
 
-func NewCustomerRepositoryDB() CustomerRepositoryDb {
+func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	client, err := sql.Open("mysql", "root:@tcp(localhost:3306)/banking")
 	if err != nil {
 		log.Fatal("Error al conectar a la base de datos => " + err.Error())
@@ -54,4 +54,16 @@ func NewCustomerRepositoryDB() CustomerRepositoryDb {
 	}
 }
 
-// Database adapter 11:00
+func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, error) {
+	// Hacemos una llamada a la base de datos
+	customerSql := "select customer_id, first_name, last_name, city, zip_code, date_birth, status from customers where customer_id = ?"
+	row := d.client.QueryRow(customerSql, id)
+	var c Customer
+
+	err:= row.Scan(&c.Id, &c.FirstName, &c.LastName, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status)
+	if err != nil{
+		log.Println("Error al buscar un cliente => " + err.Error())
+		return nil, err
+	}
+	return &c, nil
+}
