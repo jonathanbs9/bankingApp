@@ -4,7 +4,7 @@ import "github.com/jonathanbs9/bankingApp/domain"
 
 type CustomerService interface {
 	GetAllCustomer() ([]domain.Customer, error)
-	GetCustomerById(id string) (*domain.Customer, error)
+	GetCustomerById(string) (*domain.Customer, error)
 }
 
 type DefaultCustomerService struct {
@@ -15,6 +15,7 @@ func (s DefaultCustomerService) GetAllCustomer() ([]domain.Customer, error) {
 	return s.repo.FindAll()
 }
 
+// Here we link service with repository
 func (s DefaultCustomerService) GetCustomerById(id string) (*domain.Customer, error) {
 	return s.repo.GetCustomerById(id)
 }

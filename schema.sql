@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts`(
 	`account_id` int(11) NOT NULL AUTO_INCREMENT,
 	`customer_id` int(11) NOT NULL, 
-	`opening_date`datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`opening_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`account_type` varchar(10) NOT NULL,
 	`pin` varchar(10) NOT NULL,
 	`status` tinyint(4) NOT NULL DEFAULT '1',

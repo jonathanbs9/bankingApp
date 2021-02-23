@@ -1,16 +1,16 @@
 package domain
 
 type Customer struct {
-	Id          string
-	FirstName   string
-	LastName    string
-	DateOfBirth string
-	City        string
-	ZipCode     string
-	Status      bool
+	Id          string `json:"id"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	DateOfBirth string `json:"date_of_birth"`
+	City        string `json:"city"`
+	ZipCode     string `json:"zip_code"`
+	Status      bool  `json:"status"`
 }
 
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
-	GetCustomerById(id string) (*Customer, error)
+	GetCustomerById(string) (*Customer, error)
 }
