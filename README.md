@@ -34,3 +34,7 @@
 * Design your own error library
 * State based unit testing
 * Unit testing using the mocks
+
+# Hexagonal architecture
+
+
