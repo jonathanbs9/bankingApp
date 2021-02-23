@@ -2,6 +2,7 @@ package domain
 
 import (
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"time"
 )
@@ -10,7 +11,7 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func (d *CustomerRepositoryDb) FindAll() ([]Customer, error) {
+func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 	c, err := sql.Open("mysql", "root:@tcp(locahost:3306)/banking")
 	if err != nil {
 		log.Fatal("Error al conectar a la base de datos => " + err.Error())
@@ -20,7 +21,7 @@ func (d *CustomerRepositoryDb) FindAll() ([]Customer, error) {
 	c.SetMaxOpenConns(10)
 	c.SetMaxIdleConns(10)
 
-	query := "select customer_id, first_name, last_name, city, zip_code, date_birth, status from customers"
+	query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers"
 
 	rows, err := d.client.Query(query)
 	if err != nil {
@@ -56,7 +57,7 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 
 func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, error) {
 	// Hacemos una llamada a la base de datos
-	customerSql := "select customer_id, first_name, last_name, city, zip_code, date_birth, status from customers where customer_id = ?"
+	customerSql := "select customer_id, first_name, last_name, city, zipcode, date_birth, status from customers where customer_id = ?"
 	row := d.client.QueryRow(customerSql, id)
 	var c Customer
 
@@ -65,5 +66,7 @@ func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, error) {
 		log.Println("Error al buscar un cliente => " + err.Error())
 		return nil, err
 	}
+	// Implementar si no encuentra el customer porque no existe en BD (404). No debería ser un error. Sino devolver vacio
+
 	return &c, nil
 }
