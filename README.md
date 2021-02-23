@@ -36,5 +36,6 @@
 * Unit testing using the mocks
 
 # Hexagonal architecture
+![alt text](https://i.ibb.co/RCKw5Gg/Hex-arq-repo-data-adapter.png)
 
 
