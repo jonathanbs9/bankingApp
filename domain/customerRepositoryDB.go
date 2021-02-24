@@ -68,10 +68,8 @@ func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, *errs.AppEr
 			return nil, errs.NewNotFoundError("Cliente no encontrado")
 		} else {
 			log.Println("Error al buscar un cliente => " + err.Error())
-			return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
+			return nil , errs.NewUnexpectedError("Error inesperado en la base de datos")
 		}
-
 	}
-
 	return &c, nil
 }

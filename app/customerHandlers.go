@@ -11,12 +11,6 @@ import (
 	"github.com/jonathanbs9/bankingApp/service"
 )
 
-type Customer struct {
-	FirstName string `json:"first_name" xml:"first_name"`
-	LastName  string `json:"last_name" xml:"last_name"`
-	City      string `json:"city" xml:"city"`
-}
-
 // Construyo un handler que va a tener el service. De esta manera conecto handler-service
 type CustomerHandlers struct {
 	service service.CustomerService
@@ -32,12 +26,12 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 
 	if r.Header.Get("Content-type") == "application/xml" {
 		// XML format
-		w.Header().Set("Content-type", "application/xml")
+		w.Header().Add("Content-type", "application/xml")
+		w.WriteHeader(http.StatusOK)
 		xml.NewEncoder(w).Encode(customers)
 	} else {
 		// Json format
-		w.Header().Set("Content-type", "application/json")
-		json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customers)
 	}
 }
 
@@ -47,13 +41,22 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 
 	// Here we link handler with service
 	customer, err := ch.service.GetCustomerById(id)
+
 	if err!= nil {
-		w.WriteHeader(err.Code)
-		fmt.Println(w, err.Message)
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		// Case success
+		writeResponse(w, http.StatusOK, customer)
 	}
-	// Case success
-	w.Header().Set("Content-type", "application/json")
-	json.NewEncoder(w).Encode(customer)
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}){
+	w.Header().Add("Content-type", "application/json")
+	w.WriteHeader(code)
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil{
+		panic(err)
+	}
 }
 
 func getCustomerById(w http.ResponseWriter, r *http.Request) {
