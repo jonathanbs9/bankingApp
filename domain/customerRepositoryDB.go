@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jonathanbs9/bankingApp/errs"
+	"github.com/jonathanbs9/bankingApp/logger"
 	"log"
 	"time"
 )
@@ -32,10 +33,9 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 		rows, err = d.client.Query(query, status)
 	}
 
-
 	//rows, err = d.client.Query(query)
 	if err != nil {
-		log.Println("No se pueden obtener resultados (GetAllCustomers) de la BD => \n " + err.Error())
+		logger.Error("No se pueden obtener resultados (GetAllCustomers) de la BD => \n " + err.Error())
 		return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
 	}
 
@@ -44,12 +44,30 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 		var c Customer
 		err := rows.Scan(&c.Id, &c.FirstName, &c.LastName, &c.DateOfBirth, &c.City, &c.ZipCode, &c.Status)
 		if err != nil {
-			log.Println("Error al scanear customers => " + err.Error())
+			logger.Error("Error al scanear customers => " + err.Error())
 			return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
 		}
 		customers = append(customers, c)
 	}
 	return customers, nil
+}
+
+func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, *errs.AppError) {
+	// Hacemos una llamada a la base de datos
+	customerSql := "select customer_id, first_name, last_name, city, zipcode, date_birth, status from customers where customer_id = ?"
+	row := d.client.QueryRow(customerSql, id)
+	var c Customer
+
+	err:= row.Scan(&c.Id, &c.FirstName, &c.LastName, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status)
+	if err != nil{
+		if err == sql.ErrNoRows{
+			return nil, errs.NewNotFoundError("Cliente no encontrado")
+		} else {
+			logger.Error("Error al buscar un cliente => " + err.Error())
+			return nil , errs.NewUnexpectedError("Error inesperado en la base de datos")
+		}
+	}
+	return &c, nil
 }
 
 func NewCustomerRepositoryDb() CustomerRepositoryDb {
@@ -64,22 +82,4 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	return CustomerRepositoryDb{
 		client: client,
 	}
-}
-
-func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, *errs.AppError) {
-	// Hacemos una llamada a la base de datos
-	customerSql := "select customer_id, first_name, last_name, city, zipcode, date_birth, status from customers where customer_id = ?"
-	row := d.client.QueryRow(customerSql, id)
-	var c Customer
-
-	err:= row.Scan(&c.Id, &c.FirstName, &c.LastName, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status)
-	if err != nil{
-		if err == sql.ErrNoRows{
-			return nil, errs.NewNotFoundError("Cliente no encontrado")
-		} else {
-			log.Println("Error al buscar un cliente => " + err.Error())
-			return nil , errs.NewUnexpectedError("Error inesperado en la base de datos")
-		}
-	}
-	return &c, nil
 }
