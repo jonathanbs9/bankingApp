@@ -23,7 +23,7 @@ func Start() {
 
 
 	// Server starting
-	log.Println("Conectado puerto 8000")
+	log.Println("Conected on port 8000")
 	http.ListenAndServe(":8000", router)
 
 }
