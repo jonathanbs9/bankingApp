@@ -5,20 +5,25 @@ import (
 )
 
 type AppError struct {
-	Code int
-	Message string
+	Code    int `json:"code,omitempty	"`
+	Message string `json:"message"`
 }
 
-func NewNotFoundError(message string) *AppError{
+func (e AppError) AsMessage()*AppError  {
 	return &AppError{
-		Code: http.StatusNotFound,
+		Message: e.Message,
+	}
+}
+func NewNotFoundError(message string) *AppError {
+	return &AppError{
+		Code:    http.StatusNotFound,
 		Message: message,
 	}
 }
 
-func NewUnexpectedError(message string) *AppError{
+func NewUnexpectedError(message string) *AppError {
 	return &AppError{
-		Code: http.StatusInternalServerError,
+		Code:    http.StatusInternalServerError,
 		Message: message,
 	}
 }
