@@ -12,20 +12,28 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
-	c, err := sql.Open("mysql", "root:@tcp(locahost:3306)/banking")
+func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {
+	/*c, err := sql.Open("mysql", "root:@tcp(locahost:3306)/banking")
 	if err != nil {
 		log.Println("Error al conectar a la base de datos  => " + err.Error())
 		return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
 	}
-
 	c.SetConnMaxLifetime(time.Second * 5)
 	c.SetMaxOpenConns(10)
-	c.SetMaxIdleConns(10)
+	c.SetMaxIdleConns(10)*/
+	var rows  *sql.Rows
+	var err error
 
-	query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers"
+	if status == ""{
+		query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers"
+		rows, err = d.client.Query(query)
+	} else {
+		query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers where status = ?"
+		rows, err = d.client.Query(query, status)
+	}
 
-	rows, err := d.client.Query(query)
+
+	//rows, err = d.client.Query(query)
 	if err != nil {
 		log.Println("No se pueden obtener resultados (GetAllCustomers) de la BD => \n " + err.Error())
 		return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
@@ -36,7 +44,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 		var c Customer
 		err := rows.Scan(&c.Id, &c.FirstName, &c.LastName, &c.DateOfBirth, &c.City, &c.ZipCode, &c.Status)
 		if err != nil {
-			log.Fatal("Error al scanear customers => " + err.Error())
+			log.Println("Error al scanear customers => " + err.Error())
 			return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
 		}
 		customers = append(customers, c)
