@@ -2,9 +2,7 @@ package app
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,18 +17,10 @@ type CustomerHandlers struct {
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	// Llamo al handler -> service -> func
 	customers, err := ch.service.GetAllCustomer()
-	if err != nil {
-		log.Fatal("Error al obtener los clientes | " + err.Error())
-		return
-	}
-
-	if r.Header.Get("Content-type") == "application/xml" {
-		// XML format
-		w.Header().Add("Content-type", "application/xml")
-		w.WriteHeader(http.StatusOK)
-		xml.NewEncoder(w).Encode(customers)
+	if err!= nil {
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		// Json format
+		// Case success
 		writeResponse(w, http.StatusOK, customers)
 	}
 }
