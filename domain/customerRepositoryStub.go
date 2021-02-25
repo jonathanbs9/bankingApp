@@ -11,9 +11,9 @@ func (s CustomerRepositoryStub) FindAll() ([]Customer, error) {
 func NewCustomerRepositoryStub() CustomerRepositoryStub {
 	customers := []Customer{
 		{Id: "1", FirstName: "Jonathan", LastName: "Brull S.", DateOfBirth: "1986-06-23", City: "Mar del Plata",
-			ZipCode: "7600", Status: true},
+			ZipCode: "7600", Status: "active"},
 		{Id: "2", FirstName: "Ruben", LastName: "De Ronde", DateOfBirth: "1980-02-20", City: "Amsterdam",
-			ZipCode: "7600", Status: true},
+			ZipCode: "7600", Status: "inactive"},
 	}
 	return CustomerRepositoryStub{customers: customers}
 }

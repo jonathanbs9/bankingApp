@@ -22,18 +22,14 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 	if status == "" {
 		query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers"
 		err = d.client.Select(&customers, query)
-		//rows, err = d.client.Query(query)
 	} else {
 		query := "select customer_id, first_name, last_name, date_birth, city, zipcode, status from customers where status = ?"
 		// 1 destination, 2 query, 3 argument
 		err = d.client.Select(&customers, query, status)
-		//rows, err = d.client.Query(query, status)
 	}
 
-	//rows, err = d.client.Query(query)
 	if err != nil {
-		logger.Error("No se pueden obtener resultados (GetAllCustomers) de la BD => ")
-		logger.Error(err.Error())
+		logger.Error("No se pueden obtener resultados (GetAllCustomers) de la BD => " +err.Error())
 		return nil, errs.NewUnexpectedError("Error inesperado en la base de datos")
 	}
 	return customers, nil
