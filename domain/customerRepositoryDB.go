@@ -2,11 +2,13 @@ package domain
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/jonathanbs9/bankingApp/errs"
 	"github.com/jonathanbs9/bankingApp/logger"
 	"log"
+	"os"
 	"time"
 )
 
@@ -55,7 +57,13 @@ func (d CustomerRepositoryDb) GetCustomerById(id string) (*Customer, *errs.AppEr
 }
 
 func NewCustomerRepositoryDb() CustomerRepositoryDb {
-	client, err := sqlx.Open("mysql", "root:@tcp(localhost:3306)/banking")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbAddr := os.Getenv("DB_ADDR")
+	dbPort := os.Getenv("DB_PORT")
+	dbName:= os.Getenv("DB_NAME")
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",dbUser, dbPass, dbAddr, dbPort, dbName)
+	client, err := sqlx.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatal("Error al conectar a la base de datos => " + err.Error())
 	}
