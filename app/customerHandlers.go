@@ -14,6 +14,7 @@ type CustomerHandlers struct {
 	service service.CustomerService
 }
 
+// getAllCustomers func =>
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	// Llamo al handler -> service -> func
@@ -26,6 +27,7 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 	}
 }
 
+// getCustomer func =>
 func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
 	vars:= mux.Vars(r)
 	id:= vars["id"]
