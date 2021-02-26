@@ -15,6 +15,12 @@ type DefaultCustomerService struct {
 	repo domain.CustomerRepository
 }
 
+// New Customer Service
+func NewCustomerService(repository domain.CustomerRepository) DefaultCustomerService {
+	return DefaultCustomerService{repository}
+}
+
+// Get All Customers
 func (s DefaultCustomerService) GetAllCustomer(status string) ([]dto.CustomerResponse, *errs.AppError) {
 	if status == "active"{
 		status = "1"
@@ -37,6 +43,7 @@ func (s DefaultCustomerService) GetAllCustomer(status string) ([]dto.CustomerRes
 	return response, err
 }
 
+// Get Customer by ID
 // Here we link service with repository
 func (s DefaultCustomerService) GetCustomerById(id string) (*dto.CustomerResponse, *errs.AppError) {
 	c, err := s.repo.GetCustomerById(id)
@@ -48,6 +55,4 @@ func (s DefaultCustomerService) GetCustomerById(id string) (*dto.CustomerRespons
 	return &response, nil
 }
 
-func NewCustomerService(repository domain.CustomerRepository) DefaultCustomerService {
-	return DefaultCustomerService{repository}
-}
+
