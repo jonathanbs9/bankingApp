@@ -11,8 +11,9 @@
 - go.uber.org/zap       (logger)
 
 ## Routes
-- GET - Customers
-- GET - Customers/{id}
+- GET  - /customers
+- GET  - /customers/{id}
+- POST - /customers/{customer_id}/account         { "account_type" : ['saving','checking'] }
 
 
 
