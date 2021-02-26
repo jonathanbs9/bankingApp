@@ -13,7 +13,8 @@
 ## Routes
 - GET  - /customers
 - GET  - /customers/{id}
-- POST - /customers/{customer_id}/account         { "account_type" : ['saving','checking'] }
+- POST - /customers/{customer_id}/account               { "account_type" : ['saving','checking'] }
+- POST - /customers/{customer_id}/account/{account_id}  
 
 
 
