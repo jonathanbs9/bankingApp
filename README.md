@@ -30,7 +30,7 @@
 * Build microservices API in Go
 * Code Refactoring in Go
 * Decoupling the domain objects and DTOs
-* Working with small steps
+* - [x] Working with small steps
 * Take the informed decision on choosing various libraries
 * Understand the role of multiplexer in HTTP web server
 * Encoding structs to JSON or XML
