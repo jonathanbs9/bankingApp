@@ -1,14 +1,15 @@
 # bankingApp
 
 ## Imports used
-- encoding/json         ()
-- fmt                   ()
-- net/http              ()
-- gorilla mux           ()
-- database/sql          ()
-- go-sql-driver/mysql   ()
+- encoding/json         (json)
+- fmt                   (formatting)
+- net/http              (htttp request)
+- gorilla mux           (enrutador)
+- database/sql          (SQL)
+- go-sql-driver/mysql   (MySQL)
 - log                   (logs)
 - go.uber.org/zap       (logger)
+- dgrijalva/jwt-go      (JWT)
 
 ## Routes
 - GET  - /customers
