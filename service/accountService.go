@@ -73,7 +73,7 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 	}
 	transaction, appError := s.repo.SaveTransaction(t)
 	if appError != nil {
-		return nil, err
+		return nil, appError
 	}
 	response := transaction.ToDto()
 	return &response, nil
